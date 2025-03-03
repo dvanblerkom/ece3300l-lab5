@@ -13,15 +13,12 @@ module led_color_rygb(
    localparam GREEN = 2;
    localparam BLUE = 3;
    
-   wire [11:0] pwm_cnt;
-   wire	     pwm_12p5;
+   wire	     pwm_12;
    wire	     pwm_25;
 
-   pwm_counter u1 (.clk(clk), .pwm_cnt(pwm_cnt));
+   pwm_gen #( .PWM_PERCENT(12)) u2_12 (.clk(clk), .pwm_out(pwm_12));
 
-   pwm_gen #( .PWM_PERCENT(12)) u2_12p5 (.pwm_cnt(pwm_cnt), .pwm_out(pwm_12p5));
-
-   pwm_gen #( .PWM_PERCENT(25)) u3_25 (.pwm_cnt(pwm_cnt), .pwm_out(pwm_25));
+   pwm_gen #( .PWM_PERCENT(25)) u3_25 (.clk(clk), .pwm_out(pwm_25));
    					  
    always @(*)
      case (color)
@@ -33,8 +30,8 @@ module led_color_rygb(
 	 end
        YELLOW: // yellow
 	 begin
-	    led_r = pwm_12p5;
-	    led_g = pwm_12p5;
+	    led_r = pwm_12;
+	    led_g = pwm_12;
 	    led_b = 0;
 	 end
        GREEN: // green
